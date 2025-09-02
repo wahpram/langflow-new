@@ -1,13 +1,14 @@
-from pydantic import BaseSettings, AnyHttpUrl
+from pydantic import AnyHttpUrl
+from pydantic_settings import BaseSettings
 
-class Settings(BaseSettings):
-    LANGFLOW_BASE_URL: AnyHttpUrl = "http://localhost:7860"
+class ProjectSettings(BaseSettings):
+    LANGFLOW_BASE_URL: str = "http://localhost:7860" # Mungkin ganti ke AnyHTTPUrl
     LANGFLOW_API_KEY: str | None = None
-    LANGFLOW_API_ID: str
+    LANGFLOW_API_ID: str | None = None
     APP_NAME: str = "Green Era Baru"
 
     class Config:
         env_file = ".env"
 
 
-settings = Settings()
+project_settings = ProjectSettings()
