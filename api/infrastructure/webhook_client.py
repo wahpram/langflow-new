@@ -14,7 +14,7 @@ class WebhookClient:
         headers = {"Content-Type": "application/json"}
         async with httpx.AsyncClient(timeout=10) as client:
             resp = await client.post(url, json=body, headers=headers)
-            resp.raise_for_status()  # biarkan meledak kalau 4xx/5xx
+            resp.raise_for_status()
             try:
                 return resp.json()
             except Exception:
