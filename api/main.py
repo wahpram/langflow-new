@@ -7,9 +7,9 @@ from httpx import HTTPStatusError
 from api.domain.entities import OutboundEvent
 from api.infrastructure.webhook_client import WebhookClient
 from api.usecases.emit_event import EmitEventUseCase
-from api.core.configs import project_settings
+from api.core.configs import project_settings as settings
 
-app = FastAPI(title=project_settings.APP_NAME)
+app = FastAPI(title=settings.APP_NAME)
 
 router = APIRouter(
     prefix="/api/v1",
@@ -27,8 +27,12 @@ async def emit(data: dict):
     )
     client = WebhookClient()
     usecase = EmitEventUseCase(client)
+    url = f"{settings.LANGFW_BASE_URL}:{settings.LANGFW_PORT}/api/v1/webhook/{settings.LANGFW_PROJECT_ID}"
     try:
-        result = await usecase(project_settings.LANGFLOW_BASE_URL + "/api/v1/webhook/", event)
+        result = await usecase(
+            url=url,
+            event=event
+        )
         return {"status": "sent", "langflow_response": result}
     except HTTPStatusError as e:
         status = e.response.status_code
@@ -39,3 +43,4 @@ async def emit(data: dict):
 async def health():
     return {"status": "ok"}
 
+#TODO: Route to organization search
